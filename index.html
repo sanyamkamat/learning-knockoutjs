@@ -12,16 +12,12 @@
 <p>Full name: <span data-bind="text: fullName"></span></p>
 
 <h3>Friends</h3>
-<div data-bind="template: 'friendsTemplate'"></div>
+<ul data-bind="template: {name:'friendsTemplate', foreach:friends}"></ul>
 
 <script id="friendsTemplate" type="text/html">
-    <ul>
-        {{each(index,friend) friends}}
-        <li>${friend.name} - ${new Date}</li>
-        {{/each}}
-    </ul>
+    <li>${$data.name} - ${new Date}</li>
 </script>
-        <button data-bind="click: addFriend">Add Friend</button>
+<button data-bind="click: addFriend">Add Friend</button>
 <script type="text/javascript">
     function friend(name) {
         return{
@@ -33,7 +29,7 @@
         firstName:ko.observable("Bert"),
         lastName:ko.observable("Smith"),
         friends:ko.observableArray([new friend("Steve"), new friend("Annie")]),
-        addFriend: function(){
+        addFriend:function () {
             this.friends.push(new friend("Another"));
         }
     };
