@@ -1,4 +1,6 @@
 <!--@{viewtag.title='Home Page'}-->
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="jquery.tmpl.min.js"></script>
 <script type="text/javascript" src="knockout-2.2.1.js"></script>
 <h3>Details</h3>
 <p>First name: <span data-bind="text: firstName"></span></p>
@@ -12,15 +14,15 @@
 <h3>Friends</h3>
 <div data-bind="template: 'friendsTemplate'"></div>
 
-<script type="text/html" id="friendsTemplate">
-<ul>
-    {(each(index,friend) friends)}
-    <li>$(friend.name)</li>
-    {(/each)}
-</ul>
+<script id="friendsTemplate" type="text/html">
+    <ul>
+        {{each(index,friend) friends}}
+        <li>${friend.name}</li>
+        {{/each}}
+    </ul>
 </script>
 <script type="text/javascript">
-    function friend() {
+    function friend(name) {
         return{
             name:ko.observable(name)
         };
@@ -29,7 +31,7 @@
     var viewModel = {
         firstName:ko.observable("Bert"),
         lastName:ko.observable("Smith"),
-        friend:ko.observableArray([new friend("Steve"), new friend("Annie")])
+        friends:ko.observableArray([new friend("Steve"), new friend("Annie")])
     };
     viewModel.fullName = ko.dependentObservable(function () {
         return this.firstName() + " " + this.lastName();
