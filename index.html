@@ -15,13 +15,19 @@
 <ul data-bind="template: {name:'friendsTemplate', foreach:friends}"></ul>
 
 <script id="friendsTemplate" type="text/html">
-    <li>${$data.name} - ${new Date}</li>
+    <li>${$data.name}
+        <input data-bind="value: name" />
+    <button data-bind="click: removeFriend">Remove</button>
+    </li>
 </script>
 <button data-bind="click: addFriend">Add Friend</button>
 <script type="text/javascript">
     function friend(name) {
         return{
-            name:ko.observable(name)
+            name:ko.observable(name),
+            removeFriend: function(){
+                viewModel.friends.remove(this);
+            }
         };
     }
 
