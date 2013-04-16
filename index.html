@@ -11,20 +11,25 @@
 
 <p>Full name: <span data-bind="text: fullName"></span></p>
 
-<h3>Friends</h3>
+<h3>Friends (<span data-bind="text: friends().length"></span>)</h3>
 <ul data-bind="template: {name:'friendsTemplate', foreach:friends}"></ul>
 
 <script id="friendsTemplate" type="text/html">
-    <li>${$data.name} - ${new Date}
+    <li>${$data.name}
         <input data-bind="value: name" />
-    <button data-bind="click: removeFriend">Remove</button>
+        <button data-bind="click: removeFriend">Remove</button>
+        <label><input type="checkbox" data-bind="checked: isOnTwitter" />Is on Twitter</label>
+        <input data-bind="value: twitterName,visible: isOnTwitter" />
     </li>
 </script>
-<button data-bind="click: addFriend">Add Friend</button>
+<button data-bind="click: addFriend,enable: friends().length < 5">Add Friend</button>
+<button data-bind="click: save">Save</button>
 <script type="text/javascript">
     function friend(name) {
         return{
             name:ko.observable(name),
+            isOnTwitter: ko.observable(false),
+            twitterName: ko.observable(),
             removeFriend: function(){
                 viewModel.friends.remove(this);
             }
@@ -37,7 +42,16 @@
         friends:ko.observableArray([new friend("Steve"), new friend("Annie")]),
         addFriend:function () {
             this.friends.push(new friend("Another"));
-        }
+        },
+		save: function(){
+			$.ajax({
+				url: 'index.html',
+				type: 'post',
+				data: ko.toJSON(this),
+				contentType: 'application/json',
+				success: function(result){alert("Ajax request sent")}
+			})
+		}
     };
     viewModel.fullName = ko.dependentObservable(function () {
         return this.firstName() + " " + this.lastName();
